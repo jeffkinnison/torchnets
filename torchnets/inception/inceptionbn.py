@@ -1,8 +1,8 @@
 from torchnets.utils import Conv2dBN
 
+import torch
 from torch.nn import Module, Linear
 import torch.nn.functional as F
-import torch.cat
 
 
 class InceptionBN(Module):
