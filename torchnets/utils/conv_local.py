@@ -164,4 +164,4 @@ def conv2d_local(input, weight, bias=None, padding=0, stride=1, dilation=1):
 
     if bias is not None:
         out = out + bias.expand_as(out)
-return out
+    return out

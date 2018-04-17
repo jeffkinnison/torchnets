@@ -13,7 +13,7 @@ setup(
               'torchnets.lenet',
               'torchnets.resnets',
               'torchnets.unet',
-              'torchnets.vgg'
+              'torchnets.vgg',
               'torchnets.utils',],
     classifiers=[
         'Development Status :: 3 - Alpha',
@@ -33,6 +33,6 @@ setup(
     keywords='machine_learning neural_networks',
     install_requires=[
         'torch>=0.3.0',
-        'torchvision'
+        'torchvision>=0.2.0'
     ],
 )
