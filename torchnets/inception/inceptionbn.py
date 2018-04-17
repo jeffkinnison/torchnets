@@ -59,7 +59,7 @@ class InceptionBN(Module):
     """
 
     def __init__(self, in_channels, n_classes, data_size):
-        super(Inception, self).__init__()
+        super(InceptionBN, self).__init__()
 
         self.conv_1 = Conv2dBN(in_channels, 64, 7, stride=2, padding=3)
 
@@ -197,7 +197,7 @@ class InceptionModuleDR(Module):
 
     def __init__(self, in_channels, channels_1x1, channels_3x3r, channels_3x3,
                  channels_5x5r, channels_5x5, channels_poolr):
-        super(InceptionModuleDR, self).__init__(in_channels, out_channels)
+        super(InceptionModuleDR, self).__init__()
 
         self.conv_1x1 = Conv2dBN(in_channels, channels_1x1, 1)
         self.conv_3x3r = Conv2dBN(in_channels, channels_3x3r, 1)
