@@ -37,9 +37,16 @@ class LeNet5(Module):
 
 
 if __name__ == '__main__':
+    import sys
     from torch.autograd import Variable
+
     m = LeNet5(1, 10, (32, 32))
     x = torch.zeros(20, 1, 32, 32)
+
+    if len(sys.argv) > 1 and sys.argv[1] == 'cuda':
+        m = m.cuda()
+        x = x.cuda()
+
     print('Model: {}'.format(m))
     print('Input Shape: {}'.format(x.size()))
     y = m(Variable(x))
