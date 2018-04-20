@@ -38,16 +38,92 @@ class LeNet5(Module):
 
 if __name__ == '__main__':
     import sys
+
     from torch.autograd import Variable
+
+    from torchnets.loaders.cifar10 import load_data
 
     m = LeNet5(1, 10, (32, 32))
     x = torch.zeros(20, 1, 32, 32)
+
+    train_set, val_set, test_set = load_data('.', 128, True, None)
 
     if len(sys.argv) > 1 and sys.argv[1] == 'cuda':
         m = m.cuda()
         x = x.cuda()
 
-    print('Model: {}'.format(m))
-    print('Input Shape: {}'.format(x.size()))
-    y = m(Variable(x))
-    print('Output Shape: {}'.format(y.size()))
+    for e in range(100):
+        current epoch = e
+        running_loss = 0.0
+        loss_denom = 0
+        total = 0
+        correct = 0
+        for data in train_set:
+            t_inputs, t_labels = data
+            t_inputs, t_labels = Variable(t_inputs.cuda()), Variable(t_labels.cuda())
+
+            loss_denom += 1
+            total += t_labels.size(0)
+
+            optimizer.zero_grad()
+            t_outputs = model(t_inputs)
+            loss = criterion(t_outputs, t_labels)
+            loss.backward()
+            optimizer.step()
+            running_loss += loss.data[0]
+            _, predicted = torch.max(t_outputs, 1)
+            correct += (predicted.data == t_labels.data).sum()
+            print(optimizer.state_dict())
+        train_loss.append(running_loss / loss_denom)
+        train_acc.append(100 * correct / total)
+
+        print('Epoch {}: train loss {}, train acc. {}'
+              .format(current_epoch + 1, train_loss[-1], train_acc[-1]))
+
+        if validation_set is not None:
+            running_loss = 0.0
+            loss_denom = 0
+            total = 0
+            correct = 0
+            for data in validation_set:
+                v_inputs, v_labels = data
+                v_inputs = Variable(v_inputs.cuda(), volatile=True)
+                v_labels = Variable(v_labels.cuda(), volatile=True)
+
+                loss_denom += 1
+                total += v_labels.size(0)
+
+                v_outputs = model(v_inputs)
+                loss = criterion(v_outputs, v_labels)
+                running_loss += loss.data[0]
+                _, predicted = torch.max(v_outputs.data, 1)
+                correct += (predicted == v_labels.data).sum()
+
+            val_loss.append(running_loss / loss_denom)
+            val_acc.append(100 * correct / total)
+            print('Epoch {}: val. loss {}, val. acc. {}'
+                  .format(current_epoch + 1, val_loss[-1], val_acc[-1]))
+
+    running_loss = 0
+    loss_denom = 0
+    total = 0
+    correct = 0
+
+    for data in test_set:
+        inputs, labels = data
+        inputs = Variable(inputs.cuda(), volatile=True)
+        labels = Variable(labels.cuda(), volatile=True)
+
+        loss_denom += 1
+        total += labels.size(0)
+
+        outputs = model(inputs)
+        loss = criterion(outputs, labels)
+        running_loss += loss.data[0]
+        _, predicted = torch.max(outputs.data, 1)
+        correct += (predicted == labels.data).sum()
+
+    test_loss = running_loss / loss_denom
+    test_acc = 100 * correct / total
+
+    print('Test loss: {}\nTest acc.: {}'.format(test_loss, test_acc))
