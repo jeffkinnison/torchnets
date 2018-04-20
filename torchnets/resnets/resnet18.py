@@ -47,5 +47,24 @@ class ResNet18(Module):
         x = self.block_51(x)
         x = self.block_52(x)
         x = F.avg_pool2d(x, 7, stride=1)
+        x = x.view(-1, x.size()[1] * x.size()[2] * x.size()[3])
         x = self.dense_1(x)
         return x
+
+
+if __name__ == '__main__':
+    import sys
+    from torch.autograd import Variable
+
+    m = ResNet18(1, 1000, (224, 224))
+    x = torch.zeros(20, 1, 224, 224)
+
+    if len(sys.argv) > 1 and sys.argv[1] == 'cuda':
+        m = m.cuda()
+        x = x.cuda()
+
+    print('Model: {}'.format(m))
+    print('Input Shape: {}'.format(x.size()))
+
+    y = m(x)
+    print('Output Shape: {}'.format(y.size()))
