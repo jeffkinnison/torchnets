@@ -11,6 +11,7 @@ setup(
     packages=['torchnets',
               'torchnets.inception',
               'torchnets.lenet',
+              'torchnets.loaders',
               'torchnets.resnets',
               'torchnets.unet',
               'torchnets.vgg',

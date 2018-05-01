@@ -53,7 +53,7 @@ if __name__ == '__main__':
         x = x.cuda()
 
     for e in range(100):
-        current epoch = e
+        current_epoch = e
         running_loss = 0.0
         loss_denom = 0
         total = 0

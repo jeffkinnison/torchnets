@@ -14,7 +14,7 @@ class Whiten(object):
     epsilon : float
         Small adjust to prevent divide-by-zero.
     """
-    def __init__(epsilon):
+    def __init__(self, epsilon):
         self.epsilon = epsilon
 
     def __call__(self, tensor):

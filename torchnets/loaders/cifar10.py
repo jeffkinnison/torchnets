@@ -1,46 +1,49 @@
 from torchnets.loaders.transforms import Whiten
 
+import numpy as np
+import torch
+from torch.utils.data.sampler import SubsetRandomSampler
 from torchvision.datasets import CIFAR10
 from torchvision.transforms import Compose, RandomHorizontalFlip, RandomCrop, \
-                                   Resize, Normalize
+                                   Resize, Normalize, ToTensor
 
 
-def load_data(path, batch_size, augment, random_seed, valid_size=.1,
-              shuffle=True, n_workers=4):
-    normalize = transforms.Normalize((0.5, 0.5, 0.5, 0.5),
-                                     (0.5, 0.5, 0.5, 0.5))
+def load_data(data_dir, batch_size, augment, random_seed, valid_size=.1,
+              shuffle=True, num_workers=4, pin_memory=True):
+    normalize = Normalize((0.5, 0.5, 0.5, 0.5),
+                          (0.5, 0.5, 0.5, 0.5))
 
-    valid_transform = transforms.Compose([
-            transforms.ToTensor(),
+    valid_transform = Compose([
+            ToTensor(),
             normalize
         ])
 
-    test_transform = transforms.Compose([
-            transforms.ToTensor(),
+    test_transform = Compose([
+            ToTensor(),
             normalize
         ])
 
     if augment:
-        train_transform = transforms.Compose([
-            transforms.RandomCrop(32, padding=4),
-            transforms.RandomHorizontalFlip(),
-            transforms.ToTensor(),
+        train_transform = Compose([
+            RandomCrop(32, padding=4),
+            RandomHorizontalFlip(),
+            ToTensor(),
             normalize,
             Whiten(1e-5)
         ])
     else:
-        train_transform = transforms.Compose([
-            transforms.ToTensor(),
+        train_transform = Compose([
+            ToTensor(),
             normalize
         ])
 
-    train_dataset = torchvision.datasets.CIFAR10(root=data_dir, train=True,
+    train_dataset = CIFAR10(root=data_dir, train=True,
                 download=True, transform=train_transform)
 
-    valid_dataset = torchvision.datasets.CIFAR10(root=data_dir, train=True,
+    valid_dataset = CIFAR10(root=data_dir, train=True,
                 download=True, transform=valid_transform)
 
-    test_dataset = torchvision.datasets.CIFAR10(root=data_dir, train=False,
+    test_dataset = CIFAR10(root=data_dir, train=False,
                 download=True, transform=test_transform)
 
     num_train = len(train_dataset)
