@@ -33,6 +33,7 @@ setup(
     ],
     keywords='machine_learning neural_networks',
     install_requires=[
+        'scikit-image>=0.13.1',
         'torch>=0.3.0',
         'torchvision>=0.2.0'
     ],
