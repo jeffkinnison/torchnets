@@ -132,8 +132,10 @@ class ConvBlock(nn.Module):
     """
     def __init__(self, in_channels, out_channels, shape):
         super(ConvBlock, self).__init__()
-        self.conv1 = nn.Conv2d(in_channels, out_channels, shape, padding=1)
-        self.conv2 = nn.Conv2d(out_channels, out_channels, shape, padding=1)
+        self.conv1 = nn.Conv2d(in_channels, out_channels, shape,
+                               stride=1, padding=1)
+        self.conv2 = nn.Conv2d(out_channels, out_channels, shape,
+                               stride=1, padding=1)
 
     def forward(self, x):
         x = F.relu(self.conv1(x))
@@ -201,7 +203,7 @@ class UpConv(nn.Module):
         super(UpConv, self).__init__()
         self.upsample = nn.Upsample(scale_factor=(2, 2), mode='bilinear')
         self.pad = nn.ReplicationPad2d((0, 1, 0, 1))
-        self.conv = nn.Conv2d(in_channels, out_channels, shape)
+        self.conv = nn.Conv2d(in_channels, out_channels, shape, stride=1)
 
     def forward(self, x):
         x = self.upsample(x)
@@ -262,10 +264,10 @@ class OutBlock(nn.Module):
     """
     def __init__(self, in_channels):
         super(OutBlock, self).__init__()
-        self.conv = nn.Conv2d(in_channels, 1, 1)
+        self.conv = nn.Conv2d(in_channels, 1, 1, stride=1)
 
     def forward(self, x):
-        x = self.conv(x)
+        x = F.softmax(self.conv(x), dim=1)
         return x
 
 

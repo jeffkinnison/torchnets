@@ -16,7 +16,6 @@ class LeNet5(Module):
         self.conv_2 = Conv2d(6, 16, 5, padding=2)
         data_shape /= 2
 
-        print(data_shape.prod() * 16)
         self.dense_1 = Linear(data_shape.prod() * 16, 120)
         self.dense_2 = Linear(120, 84)
         self.dense_3 = Linear(84, n_classes)
@@ -28,7 +27,7 @@ class LeNet5(Module):
         x = F.relu(self.conv_2(x))
         x = F.max_pool2d(x, 2)
 
-        x = x.view(-1, x.size()[1] * x.size()[2] * x.size()[3])
+        x = x.view(x.size(0), x.size(1) * x.size(2) * x.size(3))
         x = F.relu(self.dense_1(x))
         x = F.relu(self.dense_2(x))
         x = self.dense_3(x)
@@ -40,17 +39,22 @@ if __name__ == '__main__':
     import sys
 
     from torch.autograd import Variable
+    from torch.nn import CrossEntropyLoss
+    from torch.optim import SGD
 
     from torchnets.loaders.cifar10 import load_data
 
-    m = LeNet5(1, 10, (32, 32))
+    model = LeNet5(3, 10, (32, 32))
     x = torch.zeros(20, 1, 32, 32)
 
     train_set, val_set, test_set = load_data('.', 128, True, None)
 
     if len(sys.argv) > 1 and sys.argv[1] == 'cuda':
-        m = m.cuda()
+        model = model.cuda()
         x = x.cuda()
+
+    optimizer = SGD(model.parameters(), lr=1e-4, momentum=0.9)
+    criterion = CrossEntropyLoss()
 
     for e in range(100):
         current_epoch = e
@@ -67,6 +71,8 @@ if __name__ == '__main__':
 
             optimizer.zero_grad()
             t_outputs = model(t_inputs)
+            print(t_outputs.size())
+            print(t_labels.size())
             loss = criterion(t_outputs, t_labels)
             loss.backward()
             optimizer.step()

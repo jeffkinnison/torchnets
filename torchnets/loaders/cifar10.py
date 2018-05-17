@@ -1,5 +1,3 @@
-from torchnets.loaders.transforms import Whiten
-
 import numpy as np
 import torch
 from torch.utils.data.sampler import SubsetRandomSampler
@@ -29,7 +27,6 @@ def load_data(data_dir, batch_size, augment, random_seed, valid_size=.1,
             RandomHorizontalFlip(),
             ToTensor(),
             normalize,
-            Whiten(1e-5)
         ])
     else:
         train_transform = Compose([
