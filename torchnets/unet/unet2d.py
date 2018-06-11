@@ -51,7 +51,7 @@ class UNet(nn.Module):
        assisted intervention (pp. 234-241). Springer, Cham.
     """
 
-    def __init__(self, in_channels, min_filters=64):
+    def __init__(self, in_channels, min_filters=64, n_classes=1):
         super(UNet, self).__init__()
 
         prev_filters = in_channels
@@ -90,7 +90,7 @@ class UNet(nn.Module):
         curr_filters = int(curr_filters / 2)
         self.up4 = UpBlock(prev_filters, curr_filters, 3)
 
-        self.out = OutBlock(curr_filters)
+        self.out = OutBlock(curr_filters, n_classes)
 
     def forward(self, x):
         x1 = self.input(x)
@@ -262,9 +262,9 @@ class OutBlock(nn.Module):
     conv : `torch.nn.Conv2d`
         The out convolution.
     """
-    def __init__(self, in_channels):
+    def __init__(self, in_channels, out_channels):
         super(OutBlock, self).__init__()
-        self.conv = nn.Conv2d(in_channels, 1, 1, stride=1)
+        self.conv = nn.Conv2d(in_channels, out_channels, 1, stride=1)
 
     def forward(self, x):
         x = self.conv(x)
