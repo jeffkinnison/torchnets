@@ -114,9 +114,9 @@ class ConvBlock(nn.Module):
     def __init__(self, in_channels, out_channels, shape):
         super(ConvBlock, self).__init__()
         self.conv1 = nn.Conv3d(in_channels, out_channels, shape, padding=1)
-        self.conv1 = self.conv1.half()
+        #self.conv1 = self.conv1.half()
         self.conv2 = nn.Conv3d(out_channels, out_channels, shape, padding=1)
-        self.conv2 = self.conv2.half()
+        #self.conv2 = self.conv2.half()
 
     def forward(self, x):
         x = F.relu(self.conv1(x))
@@ -149,7 +149,7 @@ class DownBlock(nn.Module):
         self.conv = ConvBlock(in_channels, out_channels, shape)
 
     def forward(self, x):
-        x = F.max_pool3d(x, (1, 2, 2))
+        x = F.max_pool3d(x, 2)
         x = self.conv(x)
         return x
 
@@ -183,13 +183,13 @@ class UpConv(nn.Module):
     """
     def __init__(self, in_channels, out_channels, shape):
         super(UpConv, self).__init__()
-        self.upsample = nn.Upsample(scale_factor=(1, 2, 2), mode='bilinear')
-        self.pad = nn.ReplicationPad3d((0, 1, 0, 1, 0, 1))
-        self.conv = nn.Conv3d(in_channels, out_channels, shape)
+        #self.upsample = nn.Upsample(scale_factor=(1, 2, 2), mode='bilinear')
+        #self.pad = nn.ReplicationPad3d((0, 1, 0, 1, 0, 1))
+        self.conv = nn.ConvTranspose3d(in_channels, out_channels, shape)
 
     def forward(self, x):
-        x = self.upsample(x)
-        x = self.pad(x)
+        #x = self.upsample(x)
+        #x = self.pad(x)
         x = F.relu(self.conv(x))
         return x
 
@@ -218,7 +218,7 @@ class UpBlock(nn.Module):
     """
     def __init__(self, in_channels, out_channels, shape):
         super(UpBlock, self).__init__()
-        self.upconv = UpConv(in_channels, in_channels, (1, 2, 2))
+        self.upconv = nn.ConvTranspose3d(in_channels, in_channels, 2, stride=2)   # UpConv(in_channels, in_channels, (1, 2, 2))
         self.conv = ConvBlock(in_channels + out_channels, out_channels, shape)
 
     def forward(self, x, x2):
@@ -247,7 +247,7 @@ class OutBlock(nn.Module):
     def __init__(self, in_channels):
         super(OutBlock, self).__init__()
         self.conv = nn.Conv3d(in_channels, 1, 1)
-        self.conv.half()
+        # self.conv.half()
 
     def forward(self, x):
         x = self.conv(x)

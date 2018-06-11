@@ -236,7 +236,7 @@ class UpBlock(nn.Module):
     """
     def __init__(self, in_channels, out_channels, shape):
         super(UpBlock, self).__init__()
-        self.upconv = UpConv(in_channels, in_channels, 2)
+        self.upconv = nn.ConvTranspose2d(in_channels, in_channels, 2, stride=2)  # UpConv(in_channels, in_channels, 2)
         self.conv = ConvBlock(in_channels + out_channels, out_channels, shape)
 
     def forward(self, x, x2):
@@ -267,7 +267,7 @@ class OutBlock(nn.Module):
         self.conv = nn.Conv2d(in_channels, 1, 1, stride=1)
 
     def forward(self, x):
-        x = F.softmax(self.conv(x), dim=1)
+        x = self.conv(x)
         return x
 
 
