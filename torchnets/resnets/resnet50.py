@@ -1,9 +1,9 @@
-from torchnets.resnets.blocks import ResBlock3
-from torchnets.utils import Conv2dBN
-
 import torch
 from torch.nn import Module, Linear
 import torch.nn.functional as F
+
+from torchnets.resnets.blocks import ResBlock3
+from torchnets.utils import Conv2dBN
 
 
 class ResNet50(Module):
