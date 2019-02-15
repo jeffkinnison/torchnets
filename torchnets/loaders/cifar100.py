@@ -1,7 +1,7 @@
 import numpy as np
 import torch
 from torch.utils.data.sampler import SubsetRandomSampler
-from torchvision.datasets import CIFAR10
+from torchvision.datasets import CIFAR100
 from torchvision.transforms import Compose, RandomHorizontalFlip, RandomCrop, \
                                    Normalize, ToTensor
 
@@ -34,13 +34,13 @@ def load_data(data_dir, batch_size, augment, random_seed, valid_size=.1,
             normalize
         ])
 
-    train_dataset = CIFAR10(root=data_dir, train=True,
+    train_dataset = CIFAR100(root=data_dir, train=True,
                 download=True, transform=train_transform)
 
-    valid_dataset = CIFAR10(root=data_dir, train=True,
+    valid_dataset = CIFAR100(root=data_dir, train=True,
                 download=True, transform=valid_transform)
 
-    test_dataset = CIFAR10(root=data_dir, train=False,
+    test_dataset = CIFAR100(root=data_dir, train=False,
                 download=True, transform=test_transform)
 
     num_train = len(train_dataset)
