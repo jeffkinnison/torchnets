@@ -114,7 +114,7 @@ class InceptionBN(Module):
         x = F.avg_pool2d(x, 7)
 
         x = x.view(-1, x.size()[1] * x.size()[2] * x.size()[3])
-        x = F.softmax(self.fc1(x))
+        x = F.softmax(self.fc1(x), dim=1)
         return x
 
 
@@ -324,7 +324,6 @@ class InceptionModuleBN(Module):
 
 if __name__ == '__main__':
     import sys
-    from torch.autograd import Variable
 
     m = InceptionBN(1, 10, (224, 224))
     x = torch.zeros(20, 1, 224, 224)
@@ -335,5 +334,5 @@ if __name__ == '__main__':
 
     print('Model: {}'.format(m))
     print('Input Shape: {}'.format(x.size()))
-    y = m(Variable(x))
+    y = m(x)
     print('Output Shape: {}'.format(y.size()))
