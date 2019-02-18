@@ -73,7 +73,6 @@ class InceptionBN(Module):
         self.i3c = InceptionModuleBN(320, 64, 128, 160, 64, 96, 64,
                                      stride=2)
 
-
         self.i4a = InceptionModuleBN(576, 224, 64, 96, 96, 128, 128,
                                      pool_type='avg')
         self.i4b = InceptionModuleBN(576, 192, 96, 128, 96, 128, 128,
