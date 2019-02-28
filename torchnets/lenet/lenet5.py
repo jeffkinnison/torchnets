@@ -12,7 +12,9 @@ class LeNet5(nn.Module):
 
         hyperparameters = hyperparameters if hyperparameters is not None \
                           else {}
-        hyperparameters = self.default_hyperparameters().update(hyperparameters)
+        defaults = self.default_hyperparameters()
+        defaults.update(hyperparameters)
+        hyperparameters = defaults
 
         if isinstance(data_shape, tuple):
             data_shape = torch.tensor(list(data_shape), dtype=torch.long)
