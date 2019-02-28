@@ -7,6 +7,7 @@ class Conv2d(nn.Module):
     def __init__(self, in_channels=None, out_channels=None, kernel_size=None,
                  stride=1, padding=0, dilation=1, groups=1, activation=None,
                  dropout=None, epsilon=None, momentum=None):
+        super(Conv2d, self).__init__()
         self.layer = nn.Conv2d(
             in_channels, out_channels, kernel_size, stride=stride,
             padding=padding, dilation=dilation, groups=groups, bias=True)

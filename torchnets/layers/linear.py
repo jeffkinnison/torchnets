@@ -6,6 +6,7 @@ import torch.nn.functional as F
 class Linear(nn.Module):
     def __init__(self, in_features=None, out_features=None, activation=None,
                  dropout=None):
+        super(Linear, self).__init__()
         self.layer = nn.Linear(in_features, out_features, bias=True)
         self.activation = getattr(F, activation) if activation is not None \
                           else None
