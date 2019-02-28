@@ -10,6 +10,7 @@ setup(
     author_email='jkinniso@nd.edu',
     packages=['torchnets',
               'torchnets.inception',
+              'torchnets.layers',
               'torchnets.lenet',
               'torchnets.loaders',
               'torchnets.resnets',
@@ -34,7 +35,7 @@ setup(
     keywords='machine_learning neural_networks',
     install_requires=[
         'scikit-image>=0.13.1',
-        'torch>=0.3.0',
+        'torch>=1.0.0',
         'torchvision>=0.2.0'
     ],
 )
